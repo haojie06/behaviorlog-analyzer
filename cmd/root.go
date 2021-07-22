@@ -21,6 +21,7 @@ import (
 
 	"github.com/spf13/cobra"
 
+	"behaviorlog-analyzer/data"
 	"behaviorlog-analyzer/file"
 	"behaviorlog-analyzer/utils"
 
@@ -65,6 +66,13 @@ func init() {
 func startParser(cmd *cobra.Command, args []string) {
 	logDir = utils.PathParse(logDir)
 	file.LoadLogs(logDir)
+	logs := data.GetBlockLogByPosition(-7451, 40, -11906, -7430, 60, -11900)
+	for _, l := range logs {
+		fmt.Println(l)
+	}
+	for {
+		// 阻塞主协程
+	}
 	// cliui.Start()
 }
 

@@ -17,6 +17,7 @@ package main
 
 import (
 	"behaviorlog-analyzer/cmd"
+	"behaviorlog-analyzer/server"
 	"log"
 )
 
@@ -31,5 +32,6 @@ func main() {
 			}
 		}
 	}()
+	go server.Start("127.0.0.1", "8080")
 	cmd.Execute()
 }

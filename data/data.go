@@ -2,9 +2,8 @@ package data
 
 import "time"
 
-type LogItem struct {
+type BlockLog struct {
 	Time      time.Time
-	LogType   string
 	Action    string
 	Player    string
 	Position  string

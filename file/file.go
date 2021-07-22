@@ -11,12 +11,14 @@ import (
 	"os"
 	"path/filepath"
 	"regexp"
+	"strconv"
 	"strings"
 	"time"
 )
 
 // 读取目录下的所有文件，提取有效信息
-func LoadLogs(logDir string) (logs []data.LogItem) {
+func LoadLogs(logDir string) (logs []data.BlockLog) {
+	defer utils.MetricTime("加载日志")()
 	files, err := ioutil.ReadDir(logDir)
 	utils.CheckErr(err, "加载日志")
 	readCount := 0
@@ -43,24 +45,23 @@ func LoadLogs(logDir string) (logs []data.LogItem) {
 				utils.CheckErr(err, "时间解析"+line[0])
 				// fmt.Println(line, t)
 				// [2021-06-30 20:44:53 Place TanisGon 0 (-7438, 46, -11905) 放置 stone]
-				// Time      time.Time
-				// LogType   string
-				// Action    string
-				// Player    string
-				// Position  string
-				// PositionX int
-				// PositionY int
-				// PositionZ int
-				// Dimension string
-				// Target    string
-				// Remark    string
-				logs = append(logs, data.LogItem{
+				pos := strings.Split(line[4][1:len(line[4])-1], ", ")
+				posX, err := strconv.Atoi(pos[0])
+				utils.CheckErr(err, "x坐标转换")
+				posY, err := strconv.Atoi(pos[1])
+				utils.CheckErr(err, "y坐标转换")
+				posZ, err := strconv.Atoi(pos[2])
+				utils.CheckErr(err, "z坐标转换")
+				logs = append(logs, data.BlockLog{
 					Time:      t,
 					Action:    line[1],
 					Player:    line[2],
 					Dimension: line[3],
 					Position:  line[4],
 					Target:    line[6],
+					PositionX: posX,
+					PositionY: posY,
+					PositionZ: posZ,
 				})
 			}
 		}

@@ -56,6 +56,7 @@ func init() {
 	logDir, _ = os.Getwd()
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.behaviorlog-analyzer.yaml)")
 	rootCmd.Flags().StringVarP(&logDir, "directory", "d", logDir, "日志文件夹路径")
+	rootCmd.MarkFlagRequired("directory")
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
 	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")

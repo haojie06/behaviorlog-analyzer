@@ -16,8 +16,8 @@ import (
 	"time"
 )
 
-// 读取目录下的所有文件，提取有效信息
-func LoadLogs(logDir string) (logs []data.BlockLog) {
+// 读取目录下的所有文件，提取有效信息 储存进sqlite 当前每次运行程序都要重新载入所有的数据，之后改为只添加增量
+func LoadLogs(logDir string) (logs []interface{}) {
 	defer utils.MetricTime("加载日志")()
 	files, err := ioutil.ReadDir(logDir)
 	utils.CheckErr(err, "加载日志")
@@ -45,13 +45,7 @@ func LoadLogs(logDir string) (logs []data.BlockLog) {
 				utils.CheckErr(err, "时间解析"+line[0])
 				// fmt.Println(line, t)
 				// [2021-06-30 20:44:53 Place TanisGon 0 (-7438, 46, -11905) 放置 stone]
-				pos := strings.Split(line[4][1:len(line[4])-1], ", ")
-				posX, err := strconv.Atoi(pos[0])
-				utils.CheckErr(err, "x坐标转换")
-				posY, err := strconv.Atoi(pos[1])
-				utils.CheckErr(err, "y坐标转换")
-				posZ, err := strconv.Atoi(pos[2])
-				utils.CheckErr(err, "z坐标转换")
+				posX, posY, posZ := parseLocation(line[4])
 				logs = append(logs, data.BlockLog{
 					Time:      t,
 					Action:    line[1],
@@ -66,8 +60,8 @@ func LoadLogs(logDir string) (logs []data.BlockLog) {
 			}
 		}
 	}
-	fmt.Println("完成日志文件读取，共读取", readCount, "行")
-	fmt.Printf("%v\n", logs[len(logs)-1])
+	fmt.Printf("完成日志文件读取，共读取%d行\n", readCount)
+	data.SaveLogs(logs)
 	return
 }
 
@@ -75,5 +69,19 @@ func LoadLogs(logDir string) (logs []data.BlockLog) {
 func parseTime(rawTime string) (t time.Time, err error) {
 	rawTime = strings.Replace(rawTime, "\uFEFF", "", -1)
 	t, err = time.Parse("2006-01-02 15:04:05", rawTime)
+	return
+}
+
+func parseLocation(location string) (x int32, y int32, z int32) {
+	pos := strings.Split(location[1:len(location)-1], ", ")
+	pX, err := strconv.ParseInt(pos[0], 10, 32)
+	utils.CheckErr(err, "x坐标转换")
+	pY, err := strconv.ParseInt(pos[1], 10, 32)
+	utils.CheckErr(err, "y坐标转换")
+	pZ, err := strconv.ParseInt(pos[2], 10, 32)
+	utils.CheckErr(err, "z坐标转换")
+	x = int32(pX)
+	y = int32(pY)
+	z = int32(pZ)
 	return
 }

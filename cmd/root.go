@@ -65,6 +65,7 @@ func init() {
 func startParser(cmd *cobra.Command, args []string) {
 	logDir = utils.PathParse(logDir)
 	file.LoadLogs(logDir)
+	// cliui.Start()
 }
 
 // initConfig reads in config file and ENV variables if set.

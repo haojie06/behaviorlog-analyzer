@@ -60,7 +60,7 @@ func LoadLogs(logDir string) (logs []interface{}) {
 			}
 		}
 	}
-	fmt.Printf("完成日志文件读取，共读取%d行\n", readCount)
+	fmt.Printf("完成日志文件读取，共读取%d行\n开始载入数据库...", readCount)
 	data.SaveLogs(logs)
 	return
 }

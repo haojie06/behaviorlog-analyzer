@@ -18,10 +18,11 @@ package cmd
 import (
 	"fmt"
 	"os"
+	"path/filepath"
 
 	"github.com/spf13/cobra"
 
-	"behaviorlog-analyzer/data"
+	"behaviorlog-analyzer/cli"
 	"behaviorlog-analyzer/file"
 	"behaviorlog-analyzer/utils"
 
@@ -55,9 +56,10 @@ func init() {
 	// Cobra supports persistent flags, which, if defined here,
 	// will be global for your application.
 	logDir, _ = os.Getwd()
+	logDir = filepath.Join(logDir, "log")
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.behaviorlog-analyzer.yaml)")
 	rootCmd.Flags().StringVarP(&logDir, "directory", "d", logDir, "日志文件夹路径")
-	rootCmd.MarkFlagRequired("directory")
+	// rootCmd.MarkFlagRequired("directory")
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
 	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
@@ -66,13 +68,13 @@ func init() {
 func startParser(cmd *cobra.Command, args []string) {
 	logDir = utils.PathParse(logDir)
 	file.LoadLogs(logDir)
-	logs := data.GetBlockLogByPosition(-7451, 40, -11906, -7430, 60, -11900)
-	for _, l := range logs {
-		fmt.Println(l)
-	}
-	for {
-		// 阻塞主协程
-	}
+	// logs := data.GetBlockLog(-7451, 40, -11906, -7430, 60, -11900, nil, nil, &data.BlockLog{
+	// 	Action: "Destroy",
+	// })
+	// for _, l := range logs {
+	// 	fmt.Println(l)
+	// }
+	cli.StartCli()
 	// cliui.Start()
 }
 

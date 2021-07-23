@@ -72,16 +72,14 @@ func parseTime(rawTime string) (t time.Time, err error) {
 	return
 }
 
-func parseLocation(location string) (x int32, y int32, z int32) {
+func parseLocation(location string) (int64, int64, int64) {
 	pos := strings.Split(location[1:len(location)-1], ", ")
-	pX, err := strconv.ParseInt(pos[0], 10, 32)
+	x, err := strconv.ParseInt(pos[0], 10, 32)
 	utils.CheckErr(err, "x坐标转换")
-	pY, err := strconv.ParseInt(pos[1], 10, 32)
+	y, err := strconv.ParseInt(pos[1], 10, 32)
 	utils.CheckErr(err, "y坐标转换")
-	pZ, err := strconv.ParseInt(pos[2], 10, 32)
+	z, err := strconv.ParseInt(pos[2], 10, 32)
 	utils.CheckErr(err, "z坐标转换")
-	x = int32(pX)
-	y = int32(pY)
-	z = int32(pZ)
-	return
+
+	return x, y, z
 }

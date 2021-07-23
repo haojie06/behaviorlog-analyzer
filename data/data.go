@@ -8,9 +8,9 @@ type BlockLog struct {
 	Action    string
 	Player    string
 	Position  string
-	PositionX int32
-	PositionY int32
-	PositionZ int32
+	PositionX int64
+	PositionY int64
+	PositionZ int64
 	Dimension string
 	Target    string
 	Remark    string

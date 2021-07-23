@@ -4,7 +4,9 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"os/exec"
 	"path/filepath"
+	"runtime"
 	"time"
 )
 
@@ -30,4 +32,28 @@ func MetricTime(stageName string) func() {
 		tc := time.Since(start)
 		fmt.Printf("%s Time cost = %v\n", stageName, tc)
 	}
+}
+
+func ClearScreen() {
+	if runtime.GOOS == "windows" {
+		cmd := exec.Command("cmd", "/c", "cls") //Windows example, its tested
+		cmd.Stdout = os.Stdout
+		cmd.Run()
+	} else if runtime.GOOS == "linux" {
+		cmd := exec.Command("clear") //Linux example, its tested
+		cmd.Stdout = os.Stdout
+		cmd.Run()
+	}
+}
+
+// 排序两个值，用于范围查询的条件
+func ComparePos(x int64, y int64) (smallOne int64, bigOne int64) {
+	if x <= y {
+		smallOne = x
+		bigOne = y
+	} else {
+		smallOne = y
+		bigOne = x
+	}
+	return
 }

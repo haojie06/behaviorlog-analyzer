@@ -41,11 +41,18 @@ func LoadLogs(logDir string) (logs []interface{}) {
 					fmt.Println(line)
 					utils.CheckErr(err, "读取CSV记录")
 				}
+
 				t, err := parseTime(line[0])
 				utils.CheckErr(err, "时间解析"+line[0])
 				// fmt.Println(line, t)
 				// [2021-06-30 20:44:53 Place TanisGon 0 (-7438, 46, -11905) 放置 stone]
-				posX, posY, posZ := parseLocation(line[4])
+				// 2020-10-16 22:00:04,Place,Lidabang,G,0,"(-4000, 63, -4274)",放置,dirt
+				var posX, posY, posZ int64
+				if len(line) == 7 {
+					posX, posY, posZ = parseLocation(line[4])
+				} else {
+					posX, posY, posZ = parseLocation(line[5])
+				}
 				logs = append(logs, data.BlockLog{
 					Time:      t,
 					Action:    line[1],

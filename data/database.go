@@ -3,6 +3,7 @@ package data
 import (
 	"behaviorlog-analyzer/utils"
 	"database/sql"
+	"fmt"
 	"log"
 
 	"gorm.io/driver/sqlite"
@@ -15,10 +16,21 @@ var (
 	SqlDB *sql.DB
 )
 
-func init() {
-	db, err := gorm.Open(sqlite.Open("log.db"), &gorm.Config{
-		Logger: logger.Default.LogMode(logger.Warn),
-	})
+func InitDB(memDB bool) {
+	// 0 文件数据库 1 内存数据库
+	var db *gorm.DB
+	var err error
+	if memDB {
+		fmt.Println("内存数据库")
+		db, err = gorm.Open(sqlite.Open("file::memory:?cache=shared"), &gorm.Config{
+			Logger: logger.Default.LogMode(logger.Warn),
+		})
+	} else {
+		fmt.Println("文件数据库")
+		db, err = gorm.Open(sqlite.Open("log.db"), &gorm.Config{
+			Logger: logger.Default.LogMode(logger.Warn),
+		})
+	}
 	utils.CheckErr(err, "开启sqlite数据库1")
 	DB = db
 	SqlDB, _ := db.DB()

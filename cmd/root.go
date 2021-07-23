@@ -23,6 +23,7 @@ import (
 	"github.com/spf13/cobra"
 
 	"behaviorlog-analyzer/cli"
+	"behaviorlog-analyzer/data"
 	"behaviorlog-analyzer/file"
 	"behaviorlog-analyzer/utils"
 
@@ -31,6 +32,7 @@ import (
 
 var (
 	cfgFile, logDir string
+	memDB           *bool
 )
 
 // rootCmd represents the base command when called without any subcommands
@@ -63,9 +65,11 @@ func init() {
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
 	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	memDB = rootCmd.Flags().BoolP("memdb", "m", false, "数据库只储存于内存")
 }
 
 func startParser(cmd *cobra.Command, args []string) {
+	data.InitDB(*memDB)
 	logDir = utils.PathParse(logDir)
 	file.LoadLogs(logDir)
 	// logs := data.GetBlockLog(-7451, 40, -11906, -7430, 60, -11900, nil, nil, &data.BlockLog{

@@ -7,8 +7,8 @@ import (
 
 // 方块日志相关的查询
 var (
-	actionType, block, action, dimension string
-	startPosition, endPosition           string
+	actionType, target, action, dimension string
+	startPosition, endPosition            string
 )
 
 func blockLogCli() {
@@ -29,12 +29,14 @@ func blockLogCli() {
 		default:
 			action = ""
 		}
+		fmt.Printf("输入要查询的操作对象(方块名,留空表示任何对象)\n:")
+		fmt.Scanln(&target)
 		sx, sy, sz, ex, ey, ez, _ := askForPosition()
 		fmt.Printf("\n---------------------------------------------\n")
 		if startTime != nil && endTime != nil {
-			fmt.Printf("当前输入:\n日志类型:%s\n查询的玩家:%s\n操作类型:%s\n范围:(%d,%d,%d) - (%d,%d,%d)\n时间区间:[%s] ~ [%s]\n请确认是否进行查询,输入q重新进行设置\n:", logType, player, action, sx, sy, sz, ex, ey, ez, startTime, endTime)
+			fmt.Printf("当前输入:\n日志类型:%s\n查询的玩家:%s\n操作类型:%s\n对象:%s\n范围:(%d,%d,%d) - (%d,%d,%d)\n时间区间:[%s] ~ [%s]\n请确认是否进行查询,输入q重新进行设置\n:", logType, player, action, target, sx, sy, sz, ex, ey, ez, startTime, endTime)
 		} else {
-			fmt.Printf("当前输入:\n日志类型:%s\n查询的玩家:%s\n操作类型:%s\n范围:(%d,%d,%d) - (%d,%d,%d)\n时间区间:全时段\n请确认是否进行查询,输入q重新进行设置\n:", logType, player, action, sx, sy, sz, ex, ey, ez)
+			fmt.Printf("当前输入:\n日志类型:%s\n查询的玩家:%s\n操作类型:%s\n对象:%s\n范围:(%d,%d,%d) - (%d,%d,%d)\n时间区间:全时段\n请确认是否进行查询,输入q重新进行设置\n:", logType, player, action, target, sx, sy, sz, ex, ey, ez)
 		}
 		var input string
 		// CheckValid
@@ -45,6 +47,7 @@ func blockLogCli() {
 		queryLog := &data.BlockLog{
 			Player:    player,
 			Action:    action,
+			Target:    target,
 			Dimension: dimension,
 		}
 		blockLogs := data.GetBlockLog(sx, sy, sz, ex, ey, ez, nil, nil, queryLog)

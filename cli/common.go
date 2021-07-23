@@ -64,9 +64,6 @@ func askForDimension() (dimension string) {
 }
 
 func askForPosition() (sx int64, sy int64, sz int64, ex int64, ey int64, ez int64, valid bool) {
-	fmt.Printf("输入要查询的操作对象(方块名,留空表示任何对象)\n:")
-	fmt.Scanln(&block)
-
 	fmt.Printf("输入查询范围的起点(格式: x,y,z) 留空使用-999999,0,-999999\n:")
 	fmt.Scanln(&startPosition)
 	sx, sy, sz, valid = positionParser(startPosition)
